@@ -1,0 +1,14 @@
+name: Buildpacks
+description: Transform application source code into container images without writing
+  Dockerfiles by automatically detecting dependencies and configuring the runtime
+  environment
+url: https://buildpacks.io
+tags:
+- Containers
+- Build Tools
+- CI/CD
+- Cloud Native
+created: '2025'
+modified: '2025'
+apis: []
+common: []
