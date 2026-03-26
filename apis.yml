@@ -1,14 +1,45 @@
-name: Buildpacks
-description: Transform application source code into container images without writing
-  Dockerfiles by automatically detecting dependencies and configuring the runtime
-  environment
-url: https://buildpacks.io
+aid: buildpacks
+name: Cloud Native Buildpacks
+description: >-
+  Cloud Native Buildpacks transform application source code into container images without requiring Dockerfiles, automatically detecting dependencies and configuring the runtime environment.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-- Containers
-- Build Tools
-- CI/CD
-- Cloud Native
-created: '2025'
-modified: '2025'
-apis: []
-common: []
+  - Containers
+  - Build Tools
+  - CI/CD
+  - Cloud Native
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/buildpacks/refs/heads/main/apis.yml
+created: '2025-01-01'
+modified: '2026-03-26'
+specificationVersion: '0.19'
+apis:
+  - aid: buildpacks:buildpacks
+    name: Cloud Native Buildpacks
+    description: >-
+      Cloud Native Buildpacks transform application source code into container images without requiring Dockerfiles, automatically detecting dependencies and configuring the runtime environment.
+    humanURL: https://buildpacks.io/
+    tags:
+      - Containers
+      - Build Tools
+      - CI/CD
+    properties:
+      - type: Documentation
+        url: https://buildpacks.io/docs/
+      - type: Getting Started
+        url: https://buildpacks.io/docs/for-app-developers/how-to/build-inputs/
+common:
+  - type: Website
+    url: https://buildpacks.io/
+  - type: Documentation
+    url: https://buildpacks.io/docs/
+  - type: GitHub Organization
+    url: https://github.com/buildpacks
+  - type: Blog
+    url: https://medium.com/buildpacks
+  - type: Community
+    url: https://buildpacks.io/community/
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
