@@ -5,10 +5,10 @@ description: >-
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Containers
   - Build Tools
   - CI/CD
   - Cloud Native
+  - Containers
 url: >-
   https://raw.githubusercontent.com/api-evangelist/buildpacks/refs/heads/main/apis.yml
 created: '2025-01-01'
@@ -21,9 +21,9 @@ apis:
       Cloud Native Buildpacks transform application source code into container images without requiring Dockerfiles, automatically detecting dependencies and configuring the runtime environment.
     humanURL: https://buildpacks.io/
     tags:
-      - Containers
       - Build Tools
       - CI/CD
+      - Containers
     properties:
       - type: Documentation
         url: https://buildpacks.io/docs/
