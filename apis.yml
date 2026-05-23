@@ -84,6 +84,9 @@ common:
     url: https://github.com/buildpacks
   - type: Blog
     url: https://medium.com/buildpacks
+  - url: https://medium.com/feed/buildpacks
+    type: BlogRSS
+    description: Discovered RSS/Atom feed for https://medium.com/buildpacks
   - type: Community
     url: https://buildpacks.io/community/
   - type: Registry
