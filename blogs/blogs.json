@@ -1,6 +1,21 @@
 {
   "repo": "buildpacks",
-  "feeds": [],
-  "fetched": "2026-05-17T20:48:52Z",
+  "feeds": [
+    {
+      "source": "https://github.com/buildpacks",
+      "feed_url": "https://github.com/buildpacks",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://medium.com/feed/buildpacks",
+      "feed_url": "https://medium.com/feed/buildpacks",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    }
+  ],
+  "fetched": "2026-06-01T23:35:02Z",
   "post_count": 0
 }
