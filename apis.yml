@@ -88,6 +88,17 @@ apis:
       - type: GitHubRepository
         url: https://github.com/buildpacks/spec
 common:
+  - type: IssueTracker
+    url: https://github.com/buildpacks/spec/issues
+  - type: Releases
+    url: https://github.com/buildpacks/spec/releases
+  - type: CodeOfConduct
+    url: https://github.com/buildpacks/.github/blob/main/CODE_OF_CONDUCT.md
+  - type: ContributionGuide
+    url: https://github.com/buildpacks/spec/blob/main/CONTRIBUTING.md
+  - type: License
+    name: Apache-2.0
+    url: https://github.com/buildpacks/spec/blob/main/LICENSE
   - type: DomainSecurity
     url: security/buildpacks-domain-security.yml
   - type: Website
