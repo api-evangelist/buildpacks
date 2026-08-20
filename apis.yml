@@ -29,6 +29,15 @@ specificationVersion: '0.23'
 tags:
   - Build Tools
   - CI/CD
+  - Cloud-Native
+  - CNCF
+  - Container Images
+  - Containers
+  - OCI
+  - Open-Source
+tags_raw:
+  - Build Tools
+  - CI/CD
   - Cloud Native
   - CNCF
   - Container Images
