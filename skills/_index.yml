@@ -1,0 +1,38 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  openapi/buildpacks-kpack-swagger.json (operationIds verified against the saved spec),
+  https://github.com/buildpacks/registry-api, and the buildpacks.io how-to documentation
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Packaged agent skills for the two callable Cloud Native Buildpacks surfaces. Every kpack
+  operationId referenced below was grepped out of the saved Swagger document; the Buildpack Registry
+  steps cite the three routed paths in config/routes.rb and the project's own publish how-to.
+skills:
+- name: build-an-image-with-kpack
+  file: buildpacks-build-an-image-with-kpack.md
+  api: buildpacks:kpack
+  operations:
+  - createImage
+  - getImage
+  - getImageStatus
+  - listNamespacedBuilds
+  - getBuildStatus
+  - getClusterBuilder
+  - listAllClusterbuilders
+  covers: [auth posture, idempotent vs non-idempotent writes, watch streaming, cursor paging + 410 expiry, irreversibility of delete, undocumented error codes]
+- name: publish-a-buildpack-to-the-registry
+  file: buildpacks-publish-a-buildpack-to-the-registry.md
+  api: buildpacks:registry
+  operations:
+  - GET /api/v1/search
+  - GET /api/v1/buildpacks/{namespace}/{name}
+  - GET /api/v1/buildpacks/{namespace}/{name}/{version}
+  covers: [buildpack ID rules, GitHub-delegated publish, namespace ownership, error envelope, yank and yank --undo, append-only index]
+not_covered:
+- >-
+  Authoring a buildpack against the Buildpack API, and operating the lifecycle directly, are
+  file-format and process contracts rather than callable operations. They are documented at
+  https://buildpacks.io/docs/for-buildpack-authors/ and are out of scope for an agent skill
+  grounded in operationIds.

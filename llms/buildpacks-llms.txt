@@ -1,0 +1,103 @@
+# Cloud Native Buildpacks
+
+> Cloud Native Buildpacks (CNBs) transform application source code into OCI-compliant container
+> images that can run on any cloud, without requiring a Dockerfile. CNB is a Cloud Native Computing
+> Foundation GRADUATED project (graduated 11 August 2026), licensed Apache-2.0, initiated by Pivotal
+> and Heroku in January 2018. It is primarily a SPECIFICATION project: three versioned contracts
+> (Buildpack API 0.12, Platform API 0.15, Distribution API 0.3) plus reference implementations.
+
+Generated 2026-09-05 by the API Evangelist enrichment pipeline from this provider's own published
+surface. method: generated. Source: https://raw.githubusercontent.com/api-evangelist/buildpacks/refs/heads/main/apis.yml
+
+## What is callable
+
+Most of Cloud Native Buildpacks is NOT an HTTP API. The Buildpack, Platform and Distribution APIs
+are file-format and process contracts between a buildpack, the lifecycle and a platform — you
+implement them, you do not call them. Two HTTP surfaces are actually callable:
+
+- Buildpack Registry API — https://registry.buildpacks.io/api/v1 — public, anonymous, read-only,
+  three operations. No OpenAPI is published; the contract is the README at
+  https://github.com/buildpacks/registry-api
+  - GET /api/v1/search?matches={keyword}
+  - GET /api/v1/buildpacks/{namespace}/{name}
+  - GET /api/v1/buildpacks/{namespace}/{name}/{version}
+- kpack (kpack.io/v1alpha1) — a Kubernetes CRD API served by the operator's own cluster, not by
+  buildpacks.io. Swagger 2.0 contract, 25 paths / 68 operations:
+  https://github.com/buildpacks-community/kpack/blob/main/api/openapi-spec/swagger.json
+
+## Specifications
+
+- Specification index: https://buildpacks.io/docs/reference/spec/
+- Buildpack API 0.12: https://github.com/buildpacks/spec/blob/main/buildpack.md
+- Platform API 0.15: https://github.com/buildpacks/spec/blob/main/platform.md
+- Distribution API 0.3: https://github.com/buildpacks/spec/blob/main/distribution.md
+- Buildpack Registry extension: https://github.com/buildpacks/spec/blob/main/extensions/buildpack-registry.md
+- Project descriptor extension: https://github.com/buildpacks/spec/blob/main/extensions/project-descriptor.md
+- Bindings extension: https://github.com/buildpacks/spec/blob/main/extensions/bindings.md
+- Deprecations (Buildpack API): https://github.com/buildpacks/spec/blob/main/buildpack.md#deprecations
+- Deprecations (Platform API): https://github.com/buildpacks/spec/blob/main/platform.md#deprecations
+- Release process: https://github.com/buildpacks/spec/blob/main/RELEASE.md
+
+## Documentation
+
+- Docs home: https://buildpacks.io/docs/
+- An App's Brief Journey from Source to Image (getting started): https://buildpacks.io/docs/app-journey
+- For app developers: https://buildpacks.io/docs/for-app-developers/
+- For buildpack authors: https://buildpacks.io/docs/for-buildpack-authors/
+- For platform operators: https://buildpacks.io/docs/for-platform-operators/
+- pack CLI reference: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+- Install pack: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/
+- Publish a buildpack: https://buildpacks.io/docs/for-buildpack-authors/how-to/distribute-buildpacks/publish-buildpack/
+
+## Tooling
+
+- pack CLI v0.40.9 (reference Platform API implementation): https://github.com/buildpacks/pack
+- lifecycle v0.21.18 (reference Buildpack/Platform API implementation): https://github.com/buildpacks/lifecycle
+- libcnb v2.1.0 (Go binding for buildpack authors): https://github.com/buildpacks/libcnb
+- imgutil (OCI image helpers): https://github.com/buildpacks/imgutil
+- kpack v0.18.0 (Kubernetes build service): https://github.com/buildpacks-community/kpack
+- kp CLI v0.17.2: https://github.com/buildpacks-community/kpack-cli
+- Buildpack Registry: https://registry.buildpacks.io/
+
+## Standards this project builds on
+
+- OCI Image Format Specification (layers, exported app images)
+- OCI image registries / Docker daemon (buildpackage distribution)
+- SBOM media types: application/vnd.cyclonedx+json, application/spdx+json, application/vnd.syft+json
+- RFC 2119 requirement keywords define spec compliance
+- Kubernetes CRD API conventions (kpack)
+
+## Governance, community and security
+
+- Community: https://buildpacks.io/community/
+- Project history and CNCF graduation: https://buildpacks.io/history
+- GitHub organizations: https://github.com/buildpacks and https://github.com/buildpacks-community
+- RFCs: https://github.com/buildpacks/rfcs
+- CNCF project page: https://www.cncf.io/projects/buildpacks/
+- DevStats: https://buildpacks.devstats.cncf.io/
+- Mailing list: https://lists.cncf.io/g/cncf-buildpacks/join
+- Slack (CNCF workspace, #buildpacks): https://slack.cncf.io
+- Blog: https://medium.com/buildpacks
+- Security policy / vulnerability reporting: https://github.com/buildpacks/.github/blob/main/SECURITY.md
+  (security@buildpacks.io, PGP 7AA4 452E A0C3 56F8 894D C869 4E56 F857 5412 6F64)
+- Security advisories: https://github.com/buildpacks/community/security/advisories
+- Third-party security audit (2024-07-17, Quarkslab/OSTIF): https://ostif.org/buildpacks-audit-complete/
+- Code of conduct: https://github.com/buildpacks/.github/blob/main/CODE_OF_CONDUCT.md
+- License (Apache-2.0): https://github.com/buildpacks/spec/blob/main/LICENSE
+- Privacy policy (Linux Foundation): https://www.linuxfoundation.org/privacy/
+
+## What this project does NOT publish
+
+Recorded honestly so an agent does not go looking:
+
+- No OpenAPI/Swagger for the Buildpack Registry API — the README is the only contract.
+- No MCP server: no hosted endpoint and no stdio package (checked 2026-09-05).
+- No A2A agent card: /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+  buildpacks.io, www.buildpacks.io and registry.buildpacks.io.
+- No /.well-known/ documents of any kind, including security.txt — the security policy lives in the
+  GitHub .github repository instead.
+- No AsyncAPI and no webhooks. kpack exposes a Kubernetes watch stream, which is neither.
+- No pricing, plans, quotas, API keys or accounts. This is a self-hosted open-source project.
+- No published rate limits and no rate-limit response headers on the Registry API.
+- No status page (status.buildpacks.io does not resolve).
+- No GraphQL, gRPC/Protobuf or SOAP/WSDL surface.

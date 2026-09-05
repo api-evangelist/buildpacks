@@ -1,0 +1,62 @@
+generated: '2026-09-05'
+method: probed
+source: live HTTPS probes of the named /.well-known/ paths on every host this record knows
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Probe of the five named /.well-known/ discovery documents across the registrable domain, its www
+  host, and the Buildpack Registry API host. Every path returned 404. buildpacks.io is a Hugo static
+  site that serves a styled 404 body for unknown paths (9,379 bytes of HTML), so no path here is a
+  soft-200 false positive. No WellKnown or SecurityTxt pointer is emitted, because nothing was
+  served. Note that the project DOES publish a security policy — it lives at
+  https://github.com/buildpacks/.github/blob/main/SECURITY.md, not at /.well-known/security.txt —
+  and it is recorded in security/buildpacks-vulnerability-disclosure.yml.
+hosts:
+- host: buildpacks.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: www.buildpacks.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: registry.buildpacks.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404

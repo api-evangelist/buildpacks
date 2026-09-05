@@ -1,0 +1,75 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay for the kpack API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-05'
+  method: generated
+  source: openapi/buildpacks-kpack-swagger.json
+  extends: openapi/buildpacks-kpack-swagger.json
+  note: >-
+    Non-destructive Overlay 1.0.0 capturing API Evangelist enrichment of the kpack Swagger 2.0
+    document. The original file is stored verbatim and is never mutated. Everything asserted here is
+    either read off the original document or cited to a buildpacks.io / github.com/buildpacks source.
+actions:
+- target: $.info
+  description: Attribute the contract and pin the origin the file was harvested from.
+  update:
+    description: >-
+      kpack is the Kubernetes-native Cloud Native Buildpacks build service, maintained in the
+      buildpacks-community GitHub organization alongside the CNCF Cloud Native Buildpacks project.
+      This document describes the kpack.io/v1alpha1 CustomResourceDefinition API served by the
+      operator's own Kubernetes API server; there is no buildpacks.io-hosted endpoint.
+    contact:
+      name: Cloud Native Buildpacks community
+      url: https://buildpacks.io/community/
+    license:
+      name: Apache-2.0
+      url: https://github.com/buildpacks-community/kpack/blob/main/LICENSE
+    x-origin:
+    - url: https://raw.githubusercontent.com/buildpacks-community/kpack/main/api/openapi-spec/swagger.json
+      format: swagger
+      version: '2.0'
+      harvested: '2026-09-05'
+- target: $.info
+  description: Record the contract gaps measured against the served API.
+  update:
+    x-contract-gaps:
+    - id: no-security-definitions
+      detail: >-
+        The document declares no securityDefinitions, yet all 67 operations declare a 401
+        Unauthorized response. Authentication is real and is enforced by the Kubernetes API server;
+        it is simply not modelled. See authentication/buildpacks-authentication.yml.
+    - id: v1alpha2-schemas-without-paths
+      detail: >-
+        definitions carries both kpack.build.v1alpha1.* and kpack.build.v1alpha2.* schemas, but
+        every path is rooted at /apis/kpack.io/v1alpha1/. Buildpack, ClusterBuildpack,
+        ClusterLifecycle and the Cosign/cache types exist as schemas with no operations.
+    - id: undocumented-error-responses
+      detail: >-
+        Only 200/201/401 are modelled. 403, 404, 409 and 422 are all reachable and all absent.
+        See errors/buildpacks-problem-types.yml.
+    - id: dry-run-not-declared
+      detail: >-
+        The Kubernetes dryRun=All query parameter works against these endpoints but is not declared,
+        so an agent reading only this contract cannot discover rehearsal.
+- target: $.info
+  description: Point at the derived artifacts built from this document.
+  update:
+    x-api-evangelist-artifacts:
+      authentication: authentication/buildpacks-authentication.yml
+      conventions: conventions/buildpacks-conventions.yml
+      data_model: data-model/buildpacks-data-model.yml
+      errors: errors/buildpacks-problem-types.yml
+      lifecycle: lifecycle/buildpacks-lifecycle.yml
+      conformance: conformance/buildpacks-conformance.yml
+      skills: skills/_index.yml
+- target: $.paths[*][?(@.tags)]
+  description: >-
+    Every operation in the source document is tagged only `kpack`. Record that flat tagging as a
+    finding rather than re-tagging the provider's contract.
+  update:
+    x-tagging-note: >-
+      All 68 operations carry the single tag `kpack`, so the contract offers no resource grouping.
+      Grouping by resource (Image, Build, Builder, ClusterBuilder, ClusterStack, ClusterStore,
+      SourceResolver) has to be inferred from the path.

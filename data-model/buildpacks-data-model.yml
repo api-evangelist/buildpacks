@@ -1,0 +1,165 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/buildpacks-kpack-swagger.json ($ref graph and id-reference fields), plus
+  https://github.com/buildpacks/spec/blob/main/extensions/buildpack-registry.md and live
+  https://registry.buildpacks.io/api/v1 responses for the registry entities
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Entity graph across the two callable CNB surfaces. kpack's model is the richer one — seven
+  Kubernetes custom resources whose spec/status pairs reference each other by name — and the
+  Buildpack Registry contributes a small three-entity catalog model.
+entities:
+- name: Image
+  surface: kpack
+  schema: kpack.build.v1alpha1.Image
+  key: '{namespace, metadata.name}'
+  description: >-
+    The declarative request for a continuously rebuilt OCI image. Owns the Builds it produces and
+    names the source and the builder it uses.
+  relationships:
+  - type: has_many
+    target: Build
+    via: status.latestBuild / controller ownership
+  - type: belongs_to
+    target: Builder or ClusterBuilder
+    via: spec.builder (ImageBuilder object reference)
+  - type: has_one
+    target: SourceResolver
+    via: spec.source
+- name: Build
+  surface: kpack
+  schema: kpack.build.v1alpha1.Build
+  key: '{namespace, metadata.name}'
+  description: A single execution of the CNB lifecycle. Immutable once created; status carries pod and step state.
+  relationships:
+  - type: belongs_to
+    target: Image
+    via: owner reference
+  - type: belongs_to
+    target: Builder or ClusterBuilder
+    via: spec.builder (BuildBuilderSpec)
+  - type: has_one
+    target: LastBuild
+    via: spec.lastBuild
+- name: Builder
+  surface: kpack
+  schema: kpack.build.v1alpha1.Builder
+  key: '{namespace, metadata.name}'
+  description: Namespace-scoped builder image assembled from a ClusterStore and a ClusterStack.
+  relationships:
+  - type: belongs_to
+    target: ClusterStore
+    via: spec.store
+  - type: belongs_to
+    target: ClusterStack
+    via: spec.stack
+  - type: has_many
+    target: BuildpackRef
+    via: spec.order[].group[]
+- name: ClusterBuilder
+  surface: kpack
+  schema: kpack.build.v1alpha1.ClusterBuilder
+  key: metadata.name (cluster-scoped)
+  description: Cluster-scoped sibling of Builder, usable from any namespace.
+  relationships:
+  - type: belongs_to
+    target: ClusterStore
+    via: spec.store
+  - type: belongs_to
+    target: ClusterStack
+    via: spec.stack
+- name: ClusterStore
+  surface: kpack
+  schema: kpack.build.v1alpha1.ClusterStore
+  key: metadata.name (cluster-scoped)
+  description: A collection of buildpackages available to builders.
+  relationships:
+  - type: has_many
+    target: BuildpackageInfo
+    via: status.buildpacks[]
+- name: ClusterStack
+  surface: kpack
+  schema: kpack.build.v1alpha1.ClusterStack
+  key: metadata.name (cluster-scoped)
+  description: >-
+    The build image / run image pair. Corresponds to the CNB "stack" concept, which the specs
+    deprecated in Platform API 0.12 / Buildpack API 0.10.
+  relationships:
+  - type: has_one
+    target: ClusterStackSpecImage
+    via: spec.buildImage
+  - type: has_one
+    target: ClusterStackSpecImage
+    via: spec.runImage
+- name: SourceResolver
+  surface: kpack
+  schema: kpack.build.v1alpha1.SourceResolver
+  key: '{namespace, metadata.name}'
+  description: Resolves a git ref, a blob URL or a registry image into a concrete, pinned source revision.
+  relationships:
+  - type: has_one
+    target: Git | Blob | Registry
+    via: spec.source (SourceConfig — exactly one of git/blob/registry)
+  - type: has_one
+    target: ResolvedSourceConfig
+    via: status.source
+- name: Buildpack
+  surface: Buildpack Registry
+  key: '{namespace}/{name}'
+  description: >-
+    A registry-indexed buildpack identity. Namespace ownership is assigned to the GitHub user who
+    first publishes under it.
+  fields_observed: [id, namespace, name, description, homepage, licenses, stacks]
+  relationships:
+  - type: has_many
+    target: BuildpackVersion
+    via: versions[]
+- name: BuildpackVersion
+  surface: Buildpack Registry
+  key: '{namespace}/{name}@{version}'
+  description: One published version of a buildpack, pinned to an immutable OCI digest.
+  fields_observed:
+  - version
+  - addr (OCI image reference including @sha256 digest)
+  - yanked (boolean)
+  - created_at
+  - updated_at
+  - version_major / version_minor / version_patch
+  relationships:
+  - type: belongs_to
+    target: Buildpack
+    via: namespace + name
+  note: >-
+    `yanked` is a soft-delete flag rather than a deletion — the registry index is append-only. See
+    conventions/buildpacks-conventions.yml → reversibility.
+- name: Namespace
+  surface: Buildpack Registry
+  key: namespace string matching [a-z0-9\-\.]{1,253}
+  description: >-
+    Ownership boundary for buildpack IDs. Owners are recorded in
+    https://github.com/buildpacks/registry-namespaces and changed by pull request.
+  relationships:
+  - type: has_many
+    target: Buildpack
+    via: the namespace component of the buildpack ID
+id_conventions:
+- surface: Buildpack Registry
+  form: <namespace>/<name>
+  rule: >-
+    "It MUST contain a single / character; the value to the left, called the namespace, MUST match
+    [a-z0-9\-\.]{1,253}; the value to the right, called the name, MUST match [a-z0-9\-\.]{1,253}"
+  source: https://github.com/buildpacks/spec/blob/main/extensions/buildpack-registry.md
+- surface: kpack
+  form: '{namespace}/{name} for namespaced resources; {name} for Cluster* resources'
+gaps:
+- >-
+  openapi/buildpacks-kpack-swagger.json declares BOTH kpack.build.v1alpha1.* and
+  kpack.build.v1alpha2.* schemas (119 kpack definitions in total) but every one of its 25 paths is
+  rooted at /apis/kpack.io/v1alpha1/. The v1alpha2 resources — including Buildpack,
+  ClusterBuildpack, ClusterLifecycle, CosignConfig and the cache-configuration types — have schemas
+  in the published contract but NO operations. An agent reading only this spec cannot call them.
+- >-
+  The Buildpack Registry publishes no machine-readable schema at all; its entity fields above were
+  read off live 200 responses on 2026-09-05, not off a contract.

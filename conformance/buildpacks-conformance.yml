@@ -1,0 +1,125 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://github.com/buildpacks/spec (buildpack.md, platform.md, distribution.md,
+  extensions/buildpack-registry.md), openapi/buildpacks-kpack-swagger.json, and
+  https://github.com/buildpacks/.github/blob/main/SECURITY.md
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Standards the Cloud Native Buildpacks contracts declare about themselves, each with a citation to
+  the exact normative location that declares it. CNB is itself a specification body, so most entries
+  are standards the CNB specs BUILD ON rather than compliance regimes it is audited against.
+conformance:
+- id: oci-image-spec
+  name: OCI Image Format Specification
+  domain_standard: true
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/buildpack.md — "A layer is a set of filesystem
+    changes packaged according to the OCI Image Specification
+    (https://github.com/opencontainers/image-spec/blob/main/layer.md)". The whole export phase is
+    specified as producing an OCI image.
+  note: >-
+    This is the domain standard for CNB's market (container image build). A consumer who already
+    speaks OCI can run a CNB-produced image on any OCI runtime with no bespoke connector, which is
+    the project's core value claim.
+- id: oci-distribution
+  name: OCI Distribution / image registries
+  domain_standard: true
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/distribution.md — "A buildpackage MUST exist as
+    either an OCI image on an image registry, an OCI image in a Docker daemon, or a .cnb file."
+    Buildpackage metadata is carried in the OCI image config label io.buildpacks.buildpackage.metadata.
+- id: cyclonedx-sbom
+  name: CycloneDX SBOM (application/vnd.cyclonedx+json)
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/buildpack.md#software-bill-of-materials — SBOM media
+    type table lists `application/vnd.cyclonedx+json` with file extension `cdx.json`.
+- id: spdx-sbom
+  name: SPDX SBOM (application/spdx+json)
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/buildpack.md#software-bill-of-materials — SBOM media
+    type table lists `application/spdx+json` with file extension `spdx.json`. buildpack.toml license
+    `type` MAY use an SPDX 2.1 license expression.
+- id: syft-sbom
+  name: Syft SBOM (application/vnd.syft+json)
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/buildpack.md#software-bill-of-materials — SBOM media
+    type table lists `application/vnd.syft+json` with file extension `syft.json`.
+- id: iana-media-types
+  name: IANA media type registry
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/buildpack.md — SBOM file extensions "MUST denote an
+    SBOM media type based on Internet Assigned Numbers Authority (IANA) assigned media types".
+- id: rfc2119
+  name: RFC 2119 requirement keywords
+  conforms: true
+  evidence: >-
+    https://github.com/buildpacks/spec/blob/main/README.md#key-words — the specification defines
+    compliance in RFC 2119 terms and states that "An implementation is compliant if it satisfies all
+    the MUST, MUST NOT, REQUIRED, SHALL, and SHALL NOT requirements for the protocols it implements."
+- id: kubernetes-crd-api
+  name: Kubernetes CustomResourceDefinition API conventions
+  domain_standard: true
+  conforms: true
+  evidence: >-
+    openapi/buildpacks-kpack-swagger.json — all 25 paths are rooted at /apis/kpack.io/v1alpha1/,
+    every definition reuses io.k8s.api.core.v1.* and io.k8s.apimachinery.pkg.apis.meta.v1.* schemas,
+    and each resource carries the standard list/get/create/replace/patch/delete plus /status subresource.
+  note: >-
+    For a Kubernetes platform operator this is the interoperability standard that matters — kpack
+    resources are consumable by kubectl, Argo CD, Flux and any controller that speaks CRDs, with no
+    kpack-specific client.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No OAuth 2.0 surface. /.well-known/oauth-authorization-server returned 404 on buildpacks.io,
+    www.buildpacks.io and registry.buildpacks.io (well-known/buildpacks-well-known.yml).
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on every probed host.
+- id: rfc9457
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    The Buildpack Registry API returns a bare {"error":"..."} JSON envelope, not
+    application/problem+json — observed 2026-09-05 on
+    https://registry.buildpacks.io/api/v1/buildpacks/nope/nope (404) and
+    https://registry.buildpacks.io/api/v1/search (400).
+- id: idempotency
+  conforms: partial
+  evidence: See conventions/buildpacks-conventions.yml — idempotency.coverage is `partial`.
+- id: pagination
+  conforms: false
+  evidence: >-
+    The Buildpack Registry search endpoint returns an unpaginated JSON array; no page/cursor/limit
+    parameter is documented at https://github.com/buildpacks/registry-api.
+certifications:
+- name: OpenSSF Best Practices badge
+  evidence: >-
+    https://bestpractices.coreinfrastructure.org/projects/4748 — badge asserted in the README of
+    https://github.com/buildpacks/pack and https://github.com/buildpacks/registry-api.
+- name: CNCF third-party security audit (Quarkslab / OSTIF)
+  date: '2024-07-17'
+  evidence: >-
+    https://github.com/buildpacks/.github/blob/main/SECURITY.md — "The Cloud Native Buildpacks
+    project completed a third party security audit on 2024-07-17 funded by the CNCF", report at
+    https://ostif.org/buildpacks-audit-complete/
+- name: CNCF security self-assessment
+  date: '2021-09-07'
+  evidence: >-
+    https://github.com/buildpacks/.github/blob/main/SECURITY.md, self-assessment filed in the
+    cncf/toc repository as part of the incubation process.
+- name: CNCF Graduated project
+  date: '2026-08-11'
+  evidence: >-
+    https://buildpacks.io/history#graduation — "graduated on 11 August 2026, the foundation's highest
+    maturity tier ... Graduation followed a third-party security audit by Quarkslab and the Open
+    Source Technology Improvement Fund (OSTIF), an OpenSSF Best Practices badge, and adoption of the
+    CNCF Code of Conduct."

@@ -3,11 +3,15 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Cloud Native Buildpacks
 providerId: buildpacks
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live anonymous requests to https://registry.buildpacks.io/api/v1/search?matches=ruby (200) and
+  https://registry.buildpacks.io/api/v1/buildpacks/nope/nope (404) on 2026-09-05, full response
+  headers captured; plus https://github.com/buildpacks/registry-api (the API's only documentation)
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-05'
+limit_count: 0
 tags:
   - Build Tools
   - CI/CD
@@ -18,88 +22,48 @@ tags:
   - OCI
   - Open Source
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Cloud Native Buildpacks API surface. Captures
-  per-tier quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values
-  to be replaced with published provider limits.
-headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+description: >-
+  No rate limits are published for any Cloud Native Buildpacks surface, and none are signalled at
+  runtime. The Buildpack Registry API returned no X-RateLimit-*, no RateLimit-*, no RateLimit-Policy
+  and no Retry-After header on either a 200 or a 404 response. limit_count is 0 as a measured fact:
+  the project documents no limit and the API tells a client nothing about one. An agent therefore
+  has no runtime signal to back off on and must self-throttle.
+headers: {}
+headers_observed_200:
+  - cache-control: max-age=0, private, must-revalidate
+  - content-type: application/json; charset=utf-8
+  - etag: W/"c34ead09956aac7ea909e6c7395cf1eb"
+  - strict-transport-security: max-age=31556952; includeSubDomains; preload
+  - vary: Accept, Origin
+  - server: Heroku
+  - via: 2.0 heroku-router
+  - x-request-id: 609d67d4-9146-aabc-2e01-361de8710359
+  - x-runtime: '0.073296'
+  - x-content-type-options: nosniff
+  - x-frame-options: SAMEORIGIN
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Buildpack API Specification
-      - Platform API Specification
-      - Distribution API Specification
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Buildpack API Specification
-      - Platform API Specification
-      - Distribution API Specification
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Buildpack API Specification
-      - Platform API Specification
-      - Distribution API Specification
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Buildpack API Specification
-      - Platform API Specification
-      - Distribution API Specification
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Buildpack API Specification
-      - Platform API Specification
-      - Distribution API Specification
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+  throttled: unknown
+  note: >-
+    No 429 was observed and none is documented. Whether one is ever returned — and whether the
+    Heroku router in front of the app enforces anything — is unknown, not known-absent.
+limits: []
+surfaces:
+  - api: Buildpack Registry API
+    base_url: https://registry.buildpacks.io/api/v1
+    documented_limits: none
+    runtime_signal: none
+    auth: anonymous
+    caching_hint: >-
+      A weak ETag IS returned, so a well-behaved client can revalidate with If-None-Match instead of
+      re-fetching. That is the only load-reduction affordance the API offers.
+  - api: kpack (kpack.io/v1alpha1)
+    documented_limits: n/a
+    note: >-
+      Served by the operator's own Kubernetes API server. Any throttling is the cluster's
+      (API Priority and Fairness), not the project's, and is outside this record.
+notes:
+  - >-
+    This file REPLACES a scaffold written by the 2026-05-04 bulk sweep which asserted
+    X-RateLimit-Limit/Remaining/Reset headers, a RateLimit-Policy header, a 429 response and a
+    per-minute free-tier limit. None of those were observed on the live API and none are documented.
+    The fabricated values have been removed rather than carried forward.

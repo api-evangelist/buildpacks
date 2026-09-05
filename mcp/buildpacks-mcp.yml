@@ -1,0 +1,71 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Web search for a Cloud Native Buildpacks MCP server; probes of buildpacks.io,
+  www.buildpacks.io and registry.buildpacks.io for /.well-known/ai-plugin.json,
+  /.well-known/agent-card.json and /.well-known/agent.json (all 404, see
+  well-known/buildpacks-well-known.yml); review of every non-archived repository in the
+  github.com/buildpacks and github.com/buildpacks-community organizations
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+status: candidate
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: searched
+description: >-
+  Cloud Native Buildpacks ships NO MCP server — no hosted endpoint, no stdio package, no
+  provider-published tool manifest. The tools below are a CANDIDATE surface derived from real,
+  published operations; nothing here is callable as MCP today and no `MCPServer` pointer is wired
+  into apis.yml, because that pointer asserts the provider serves an agent surface.
+finding: >-
+  This is a genuine gap and an easy one for the project to close. The Buildpack Registry API is
+  read-only, fully anonymous and has exactly three operations — about the lowest-risk MCP server a
+  CNCF project could publish.
+candidate_tools:
+- name: search_buildpacks
+  derived_from: 'GET https://registry.buildpacks.io/api/v1/search?matches={keyword}'
+  source: https://github.com/buildpacks/registry-api#search
+  input:
+    matches:
+      type: string
+      required: true
+      description: keyword(s) to search the Buildpack Registry for
+  auth: none
+  consequence: read-only
+- name: list_buildpack_versions
+  derived_from: 'GET https://registry.buildpacks.io/api/v1/buildpacks/{namespace}/{name}'
+  source: https://github.com/buildpacks/registry-api#buildpack-version-list
+  input:
+    namespace: {type: string, required: true}
+    name: {type: string, required: true}
+  auth: none
+  consequence: read-only
+- name: get_buildpack_version
+  derived_from: 'GET https://registry.buildpacks.io/api/v1/buildpacks/{namespace}/{name}/{version}'
+  source: https://github.com/buildpacks/registry-api#buildpack-version-info
+  input:
+    namespace: {type: string, required: true}
+    name: {type: string, required: true}
+    version: {type: string, required: true, description: 'semantic-version-shaped, matching [0-9]+\.[0-9]+\.[0-9]+[0-9A-Za-z\-\.]*'}
+  auth: none
+  consequence: read-only
+- name: list_kpack_images
+  derived_from: openapi/buildpacks-kpack-swagger.json operationId listNamespacedImages
+  auth: kubernetes (caller's own cluster credential)
+  consequence: read-only
+  note: >-
+    kpack tools would run against the operator's OWN cluster, not against any buildpacks.io host. A
+    kpack MCP server would be a local-stdio product, not a remote one.
+- name: get_kpack_build_status
+  derived_from: openapi/buildpacks-kpack-swagger.json operationId getBuildStatus
+  auth: kubernetes
+  consequence: read-only
+tool_crosswalk: null
+tool_crosswalk_note: >-
+  mcp/<slug>-tool-crosswalk.yml is deliberately absent. A crosswalk binds real MCP tools to real
+  OpenAPI operationIds; with no MCP server published there is nothing on the tool side to bind, and
+  writing one would assert an agent surface that does not exist.

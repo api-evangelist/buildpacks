@@ -1,0 +1,134 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/ (install) and
+  https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/ (command reference)
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  `pack` is the reference command-line implementation of the CNB Platform API — for most users it IS
+  the Cloud Native Buildpacks interface, since the specifications themselves are file-format and
+  process contracts rather than a hosted HTTP API. A second first-party CLI, `kp`, drives kpack from
+  outside a cluster.
+clis:
+- name: pack
+  official: true
+  version: 0.40.9
+  released: '2026-08-09'
+  repository: https://github.com/buildpacks/pack
+  docs: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+  implements: CNB Platform API
+  install:
+  - method: homebrew
+    platform: macOS, Linux
+    command: brew install buildpacks/tap/pack
+  - method: apt (PPA)
+    platform: Ubuntu
+    command: sudo add-apt-repository ppa:cncf-buildpacks/pack-cli && sudo apt-get update && sudo apt-get install pack-cli
+  - method: dnf
+    platform: Fedora
+    command: sudo dnf install pack
+  - method: pacman
+    platform: Arch Linux
+    command: pacman -S pack-cli
+  - method: zypper
+    platform: openSUSE
+    command: sudo zypper refresh && sudo zypper install buildpacks-cli
+  - method: chocolatey
+    platform: Windows
+    command: choco install pack --version=0.40.9
+  - method: scoop
+    platform: Windows
+    command: scoop install pack
+  - method: mise
+    platform: cross-platform
+    command: mise use -g pack@latest
+  - method: tarball
+    platform: Linux
+    command: curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.9/pack-v0.40.9-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack
+  - method: docker
+    platform: any
+    command: docker run -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/workspace -w /workspace buildpacksio/pack build <my-image> --builder <builder-image>
+  - method: go
+    platform: any
+    command: go get -u github.com/buildpacks/pack
+  commands:
+  - name: pack build
+    group: build
+    description: Turn application source into a runnable OCI image using a builder.
+  - name: pack rebase
+    group: build
+    description: Replace the base-image layers of an existing app image without rebuilding from source.
+  - name: pack builder
+    group: builders
+    subcommands: [create, inspect, suggest]
+  - name: pack buildpack
+    group: buildpacks
+    subcommands: [inspect, new, package, pull, register, yank]
+    note: >-
+      `register` publishes to the Buildpack Registry via an authenticated GitHub Issue; `yank`
+      marks a published version unusable and `yank --undo` reverses it (see
+      conventions/buildpacks-conventions.yml → reversibility).
+  - name: pack extension
+    group: extensions
+    subcommands: [inspect, new, package, pull, register, yank]
+  - name: pack manifest
+    group: images
+    subcommands: [add, annotate, create, inspect, push, remove, rm]
+    description: Manage OCI image indexes (multi-architecture manifest lists).
+  - name: pack sbom
+    group: supply chain
+    subcommands: [download]
+    description: Retrieve the CycloneDX/SPDX/Syft SBOM embedded in a CNB-built image.
+  - name: pack inspect
+    group: inspect
+    description: Inspect a CNB-built image.
+  - name: pack config
+    group: config
+    subcommands:
+    - default-builder
+    - experimental
+    - lifecycle-image
+    - pull-policy
+    - registries (add, default, list, remove)
+    - registry-mirrors (add, list, remove)
+    - run-image-mirrors (add, list, remove)
+    - trusted-builders (add, list, remove)
+  - name: pack stack
+    group: deprecated
+    subcommands: [suggest]
+    note: Stacks are deprecated as of Platform API 0.12 / Buildpack API 0.10.
+  - name: pack report
+    group: support
+    description: Print diagnostic configuration for bug reports.
+  - name: pack completion
+    group: shell
+  - name: pack version
+    group: shell
+  global_flags:
+  - --force-color
+  - --no-color
+  - -q, --quiet
+  - --timestamps
+  - -v, --verbose
+- name: kp
+  official: true
+  org: buildpacks-community
+  version: v0.17.2
+  released: '2026-06-08'
+  repository: https://github.com/buildpacks-community/kpack-cli
+  description: >-
+    Command-line client for kpack — creates and inspects the Image, Build, Builder, ClusterBuilder,
+    ClusterStack and ClusterStore resources described by openapi/buildpacks-kpack-swagger.json.
+  install:
+  - method: github release
+    command: download the kp binary from https://github.com/buildpacks-community/kpack-cli/releases
+    verified: searched
+  - method: homebrew
+    command: null
+    verified: none
+    note: >-
+      A Homebrew tap repository exists at https://github.com/buildpacks-community/homebrew-kpack-cli
+      (org repo listing, 2026-09-05), but the exact formula name was not confirmed on this pass —
+      the GitHub contents API rate-limited the check. Recorded as unverified rather than guessed.
+  command_surface: not enumerated here — this record captures the pack CLI in detail; kp is recorded as present.

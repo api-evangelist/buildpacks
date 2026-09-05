@@ -1,0 +1,174 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/buildpacks-kpack-swagger.json, live probes of https://registry.buildpacks.io/api/v1/*,
+  https://github.com/buildpacks/registry-api, and the pack CLI reference at
+  https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Cross-cutting runtime semantics for the two callable Cloud Native Buildpacks surfaces: the
+  read-only Buildpack Registry API and the kpack.io/v1alpha1 Kubernetes CRD API. The two behave
+  very differently and are recorded separately wherever they diverge.
+auth_style:
+  registry_api: none (fully anonymous read)
+  kpack: Kubernetes API-server authentication + RBAC; no CNB-issued credential
+  cross_reference: authentication/buildpacks-authentication.yml
+idempotency:
+  coverage: partial
+  scope:
+  - replaceBuilder
+  - replaceClusterBuilder
+  - replaceClusterStack
+  - replaceClusterStore
+  - replaceImage
+  - replaceBuild
+  - replaceSourceResolver
+  - patchBuilder
+  - patchClusterBuilder
+  - patchClusterStack
+  - patchClusterStore
+  - patchImage
+  - patchBuild
+  - patchSourceResolver
+  - deleteBuilder
+  - deleteClusterBuilder
+  - deleteClusterStack
+  - deleteClusterStore
+  - deleteImage
+  - deleteBuild
+  - deleteSourceResolver
+  mechanism: >-
+    kpack inherits Kubernetes semantics. Name-addressed PUT (replace*), PATCH (patch*) and DELETE
+    (delete*) are idempotent by construction — the resource is identified by {namespace,name}, not by
+    a server-generated id — and optimistic concurrency is available through
+    metadata.resourceVersion, which the API server rejects with a conflict when stale.
+  not_covered:
+  - createBuilder
+  - createClusterBuilder
+  - createClusterStack
+  - createClusterStore
+  - createImage
+  - createBuild
+  - createSourceResolver
+  not_covered_note: >-
+    The seven create operations are POST-to-collection. A replay does not silently duplicate — the
+    API server rejects the second call because the object name is already taken — but that is
+    name-uniqueness, not a replay-safety contract the caller controls.
+  idempotency_key_header: false
+  header_note: >-
+    Neither surface documents an Idempotency-Key header. There is no request-scoped replay token
+    anywhere in the CNB contract set. The Buildpack Registry API is read-only and therefore trivially
+    idempotent, but it is `na` rather than a designed mechanism.
+  registry_api: na (no write surface)
+reversibility:
+  grade: documented
+  summary: >-
+    One real reversal path exists and is first-class: a published buildpack version can be marked
+    unusable ("yanked") and that yank can be undone. Nothing else in the CNB surface set has an undo,
+    and no window is stated anywhere, so this grades `documented` rather than `verified`.
+  operations:
+  - surface: Buildpack Registry
+    action: yank a published buildpack version
+    command: pack buildpack yank <buildpack-id-and-version>
+    reversal: pack buildpack yank <buildpack-id-and-version> --undo
+    reversal_flag: '-u, --undo  undo previously yanked buildpack'
+    window: null
+    window_note: >-
+      The documentation states no time limit on --undo. Do NOT assume one; it is simply unstated.
+    docs: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/pack_buildpack_yank/
+  - surface: Buildpack Registry
+    action: publish a buildpack version
+    reversal: none (a version cannot be deleted, only yanked)
+    window: null
+    note: >-
+      The registry index is append-only by design — index entries carry a `yanked` boolean rather
+      than being removed (https://github.com/buildpacks/spec/blob/main/extensions/buildpack-registry.md).
+      Publication is therefore irreversible in the strict sense; yanking is the only remedy.
+  - surface: kpack
+    action: delete* (Builder, ClusterBuilder, ClusterStack, ClusterStore, Image, Build, SourceResolver)
+    reversal: none
+    window: null
+    note: >-
+      No undo, restore, or soft-delete operation exists in openapi/buildpacks-kpack-swagger.json.
+      Recovery means re-applying the manifest, which is the operator's responsibility, not the API's.
+  - surface: CNB image build
+    action: change the OS/base layers of a built image
+    reversal: not a reversal, but the nearest analogue — `pack rebase` swaps base image layers without rebuilding
+    window: null
+    docs: https://buildpacks.io/docs/for-app-developers/concepts/
+dry_run_mode:
+  supported: partial
+  detail: >-
+    kpack inherits the Kubernetes `dryRun=All` query parameter on create/replace/patch/delete —
+    but the parameter is NOT declared in openapi/buildpacks-kpack-swagger.json, so an agent reading
+    only the published contract cannot discover it. Recorded as partial for that reason.
+  registry_api: na (read-only)
+pagination:
+  registry_api:
+    style: none
+    detail: >-
+      GET /api/v1/search returns an unpaginated JSON array. No limit, offset, page or cursor
+      parameter is documented at https://github.com/buildpacks/registry-api or observed in responses.
+  kpack:
+    style: cursor
+    params:
+    - limit
+    - continue
+    response_field: metadata.continue on the *List resources
+    expiry: >-
+      A continue token expires "generally five to fifteen minutes" after issue; the server then
+      returns 410 ResourceExpired together with a fresh continue token, and a client that resumes
+      from it gets a NEWER snapshot — inconsistent with the earlier pages.
+    filtering:
+    - fieldSelector
+    - labelSelector
+    evidence: openapi/buildpacks-kpack-swagger.json — the `continue`/`limit` parameter descriptions on every list operation
+streaming:
+  kpack:
+    supported: true
+    mechanism: '`watch=true` on any list operation, served as application/json;stream=watch'
+    resume: >-
+      Clients resume from the last observed metadata.resourceVersion; `resourceVersion` is also a
+      list parameter.
+    note: >-
+      This is a real event surface, but it is a Kubernetes watch stream — not webhooks and not
+      AsyncAPI. No AsyncAPI document or webhook catalog is published, so asyncapi/ is deliberately absent.
+versioning:
+  cross_reference: lifecycle/buildpacks-lifecycle.yml
+  in_url: kpack only (/apis/kpack.io/v1alpha1/...); the Registry API pins /api/v1
+error_envelope:
+  registry_api: '{"error": "<string>"}' 
+  kpack: io.k8s.apimachinery.pkg.apis.meta.v1.Status
+  rfc9457: false
+  cross_reference: errors/buildpacks-problem-types.yml
+rate_limit_signaling:
+  registry_api:
+    headers_returned: []
+    detail: >-
+      No X-RateLimit-*, RateLimit-* or Retry-After header was present on a 200 or a 404 response
+      probed 2026-09-05. The response set is a Heroku router default (server, via, x-request-id,
+      x-runtime, strict-transport-security, etag, cache-control, vary).
+  cross_reference: rate-limits/buildpacks-rate-limits.yml
+request_tracing:
+  registry_api:
+    header: x-request-id
+    example_observed: 609d67d4-9146-aabc-2e01-361de8710359
+    also: 'x-runtime (server processing seconds), reporting-endpoints / NEL (Heroku network error logging)'
+    documented: false
+    note: Emitted by the Heroku router; not documented by the project, but usable for support correlation.
+caching:
+  registry_api:
+    etag: true
+    example: 'ETag: W/"c34ead09956aac7ea909e6c7395cf1eb" on GET /api/v1/search'
+    cache_control_200: max-age=0, private, must-revalidate
+    cache_control_404: no-cache
+    vary: Accept, Origin
+    conditional_requests: >-
+      A weak ETag is returned, so If-None-Match revalidation is available even though it is undocumented.
+transport_security:
+  hsts: 'max-age=31556952; includeSubDomains; preload (observed on registry.buildpacks.io)'
+  cross_reference: security/buildpacks-domain-security.yml
+metadata_and_expansion:
+  registry_api: none
+  kpack: 'standard Kubernetes metadata.labels / metadata.annotations on every resource'

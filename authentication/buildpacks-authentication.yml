@@ -1,0 +1,64 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://github.com/buildpacks/registry-api (README + config/routes.rb), anonymous probes of
+  https://registry.buildpacks.io/api/v1/*, openapi/buildpacks-kpack-swagger.json, and
+  https://buildpacks.io/docs/for-buildpack-authors/how-to/distribute-buildpacks/publish-buildpack/
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Cloud Native Buildpacks exposes three distinct authentication postures, none of them an
+  API-key or OAuth program run by the project itself. Read access to the Buildpack Registry is fully
+  anonymous; write access to the registry is delegated to GitHub identity; and the kpack CRD API
+  inherits whatever the Kubernetes API server enforces. The kpack Swagger document declares no
+  `securityDefinitions`, which is normal for a Kubernetes aggregated/CRD spec and is NOT an absence
+  of auth — the cluster enforces it.
+docs: https://buildpacks.io/docs/for-buildpack-authors/how-to/distribute-buildpacks/publish-buildpack/
+surfaces:
+- api: Buildpack Registry API (read)
+  base_url: https://registry.buildpacks.io/api/v1
+  scheme: none
+  required: false
+  verified: probed
+  evidence: >-
+    GET https://registry.buildpacks.io/api/v1/search?matches=java returned HTTP 200 with a JSON body
+    with no credential of any kind on 2026-09-05. GET .../buildpacks/heroku/nodejs likewise 200.
+  note: >-
+    All three documented read operations (search, version list, version info) are public and
+    unauthenticated. No API key, token, or account is issued by the project.
+- api: Buildpack Registry (write / publish)
+  scheme: delegated-oauth
+  provider: GitHub
+  required: true
+  verified: searched
+  evidence: >-
+    https://buildpacks.io/docs/for-buildpack-authors/how-to/distribute-buildpacks/publish-buildpack/
+    — "pack buildpack register example/my-cnb ... This will open GitHub in a browser and may ask you
+    to authenticate with GitHub."
+  note: >-
+    Publication is not an HTTP write against registry.buildpacks.io. It is a structured GitHub Issue
+    opened against the registry index; the authenticated GitHub user becomes the owner of the
+    buildpack namespace on first publish. Namespace ownership changes are made by pull request to
+    https://github.com/buildpacks/registry-namespaces.
+- api: kpack (kpack.io/v1alpha1 CRD API)
+  scheme: kubernetes
+  mechanisms:
+  - bearer token (ServiceAccount / OIDC)
+  - client certificate
+  - whatever authenticators the cluster's API server is configured with
+  authorization: Kubernetes RBAC on the kpack.io API group
+  required: true
+  verified: derived
+  evidence: >-
+    openapi/buildpacks-kpack-swagger.json declares no `securityDefinitions`; every path is rooted at
+    /apis/kpack.io/v1alpha1/ and is therefore served by the Kubernetes API server, which
+    authenticates and authorizes the request before the kpack controller sees it.
+  note: >-
+    There is no CNB-issued credential here. An agent calling kpack authenticates to the customer's
+    own cluster, not to buildpacks.io.
+oauth2: false
+api_keys: false
+scopes_artifact: null
+scopes_note: >-
+  No OAuth 2.0 scope surface exists to derive. derive-oauth-scopes.py reported 0 oauth2
+  securitySchemes on 2026-09-05; scopes/ is deliberately absent rather than empty.

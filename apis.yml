@@ -1,13 +1,14 @@
 aid: buildpacks
 name: Cloud Native Buildpacks
-description: >-
-  Cloud Native Buildpacks (CNBs) transform application source code into
-  OCI-compliant container images that can run on any cloud, without requiring
-  Dockerfiles. Initiated by Pivotal and Heroku in January 2018, CNBs are a CNCF
-  incubating project licensed under Apache-2.0. They centralize container
-  expertise through composable buildpacks, enable layer rebasing for efficient
-  OS updates, and generate Software Bills of Materials (SBOM). The pack CLI and
-  kpack platform operator are primary integration points.
+description: 'Cloud Native Buildpacks (CNBs) transform application source code into OCI-compliant container
+  images that can run on any cloud, without requiring Dockerfiles. Initiated by Pivotal and Heroku in
+  January 2018, CNB joined the CNCF as a Sandbox project in October 2018 and GRADUATED on 11 August 2026,
+  the foundation''s highest maturity tier. It is licensed Apache-2.0. CNB is primarily a specification
+  project: three independently versioned contracts — Buildpack API 0.12, Platform API 0.15 and Distribution
+  API 0.3 — plus reference implementations (the pack CLI and the lifecycle). It centralizes container
+  expertise through composable buildpacks, enables layer rebasing for efficient OS updates, and generates
+  Software Bills of Materials in CycloneDX, SPDX and Syft formats. The pack CLI, the kpack Kubernetes
+  operator and the public Buildpack Registry API are the primary integration points.'
 type: Index
 deliveryModel:
   model: self-hosted
@@ -22,207 +23,371 @@ deliveryModel:
   generated: '2026-08-28'
   method: derived
 accessModel:
-  pricing: freemium
-  onboarding: unknown
+  pricing: free
+  onboarding: none
   trial: false
-  try_now: false
-  public: false
-  label: Freemium
-  confidence: medium
+  try_now: true
+  public: true
+  label: Free open source · no account, no plans
+  confidence: high
   source:
   - plans
-  generated: '2026-07-22'
-  method: derived
+  - license
+  - probe
+  generated: '2026-09-05'
+  method: searched
+  note: Apache-2.0 CNCF Graduated project. No plans, no pricing page, no account and no API key exist
+    (plans/buildpacks-plans-pricing.yml, plan_count 0). The Buildpack Registry API at registry.buildpacks.io/api/v1
+    answers anonymously with HTTP 200, so try_now and public are true. This replaces a `freemium` value
+    derived from the 2026-05-04 scaffold that asserted a fabricated free tier.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/buildpacks.png
 url: https://raw.githubusercontent.com/api-evangelist/buildpacks/refs/heads/main/apis.yml
 created: '2025-01-01'
-modified: '2026-04-21'
+modified: '2026-09-05'
 specificationVersion: '0.23'
 tags:
-  - Build Tools
-  - CI/CD
-  - Cloud-Native
-  - CNCF
-  - Container Images
-  - Containers
-  - OCI
-  - Open-Source
+- Build Tools
+- CI/CD
+- Cloud-Native
+- CNCF
+- Container Images
+- Containers
+- OCI
+- Open-Source
 tags_raw:
-  - Build Tools
-  - CI/CD
-  - Cloud Native
-  - CNCF
-  - Container Images
-  - Containers
-  - OCI
-  - Open Source
+- Build Tools
+- CI/CD
+- Cloud Native
+- CNCF
+- Container Images
+- Containers
+- OCI
+- Open Source
 apis:
-  - aid: buildpacks:buildpack-api
-    name: Buildpack API Specification
-    description: >-
-      The Buildpack API defines the contract between a buildpack and the
-      lifecycle that executes it. It specifies detect, build, and export phases,
-      layer contribution formats, environment variable handling, and SBOM
-      generation interfaces.
-    humanURL: https://buildpacks.io/docs/reference/spec/buildpack-api/
-    tags:
-      - API Specification
-      - Buildpacks
-      - Container Images
-      - OCI
-    properties:
-      - type: Documentation
-        url: https://buildpacks.io/docs/reference/spec/buildpack-api/
-      - type: GitHubRepository
-        url: https://github.com/buildpacks/spec
-  - aid: buildpacks:platform-api
-    name: Platform API Specification
-    description: >-
-      The Platform API defines the contract between a platform (such as pack or
-      kpack) and the CNB lifecycle. It covers builder configuration, build
-      inputs and outputs, stack definitions, and run image management.
-    humanURL: https://buildpacks.io/docs/reference/spec/platform-api/
-    tags:
-      - API Specification
-      - Container Images
-      - Platforms
-    properties:
-      - type: Documentation
-        url: https://buildpacks.io/docs/reference/spec/platform-api/
-      - type: GitHubRepository
-        url: https://github.com/buildpacks/spec
-  - aid: buildpacks:distribution-api
-    name: Distribution API Specification
-    description: >-
-      The Distribution API defines the OCI-based format for packaging and
-      distributing buildpacks and builders via container registries, including
-      the buildpackage format.
-    humanURL: https://buildpacks.io/docs/reference/spec/distribution-api/
-    tags:
-      - API Specification
-      - Distribution
-      - OCI
-      - Packaging
-    properties:
-      - type: Documentation
-        url: https://buildpacks.io/docs/reference/spec/distribution-api/
-      - type: GitHubRepository
-        url: https://github.com/buildpacks/spec
-common:
-  - type: IssueTracker
-    url: https://github.com/buildpacks/spec/issues
-  - type: Releases
-    url: https://github.com/buildpacks/spec/releases
-  - type: CodeOfConduct
-    url: https://github.com/buildpacks/.github/blob/main/CODE_OF_CONDUCT.md
-  - type: ContributionGuide
-    url: https://github.com/buildpacks/spec/blob/main/CONTRIBUTING.md
-  - type: License
-    name: Apache-2.0
-    url: https://github.com/buildpacks/spec/blob/main/LICENSE
-  - type: DomainSecurity
-    url: security/buildpacks-domain-security.yml
-  - type: Website
-    url: https://buildpacks.io
+- aid: buildpacks:buildpack-api
+  name: Buildpack API Specification
+  description: The Buildpack API is the contract between a buildpack and the lifecycle. It defines the
+    detect and build executables, layers, build-plan provisions and requirements, and image extension
+    lifecycle that buildpack authors implement to participate in a CNB build.
+  humanURL: https://buildpacks.io/docs/reference/spec/buildpack-api/
+  tags:
+  - API Specification
+  - Buildpacks
+  - Container Images
+  - OCI
+  - Specification
+  properties:
   - type: Documentation
-    url: https://buildpacks.io/docs/
-  - type: GitHubOrganization
-    url: https://github.com/buildpacks
-  - type: Blog
-    url: https://medium.com/buildpacks
-  - url: https://medium.com/feed/buildpacks
-    type: BlogRSS
-    description: Discovered RSS/Atom feed for https://medium.com/buildpacks
-  - type: Community
-    url: https://buildpacks.io/community/
-  - type: Registry
-    url: https://registry.buildpacks.io/
+    url: https://buildpacks.io/docs/reference/spec/buildpack-api/
+  - type: GitHubRepository
+    url: https://github.com/buildpacks/spec
+  - url: https://github.com/buildpacks/spec/blob/main/buildpack.md
+    type: Specification
+  - url: https://buildpacks.io/docs/for-buildpack-authors/
+    type: Documentation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: buildpacks:platform-api
+  name: Platform API Specification
+  description: The Platform API is the contract between the CNB lifecycle and a platform such as pack,
+    kpack, or a CI runner. It defines how builders, stacks, run images, and inputs are passed to the lifecycle
+    phases (analyze, detect, restore, build, export, and rebase) and how outputs are consumed.
+  humanURL: https://buildpacks.io/docs/reference/spec/platform-api/
+  tags:
+  - API Specification
+  - Container Images
+  - Lifecycle
+  - Platform
+  - Platforms
+  - Specification
+  properties:
+  - type: Documentation
+    url: https://buildpacks.io/docs/reference/spec/platform-api/
+  - type: GitHubRepository
+    url: https://github.com/buildpacks/spec
+  - url: https://github.com/buildpacks/spec/blob/main/platform.md
+    type: Specification
+  - url: https://buildpacks.io/docs/for-platform-operators/
+    type: Documentation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: buildpacks:distribution-api
+  name: Distribution API Specification
+  description: The Distribution API specifies how buildpacks and builders are packaged as OCI artifacts,
+    signed, and distributed through OCI registries. It also covers how meta-buildpacks compose other buildpacks
+    and how stacks and run images are referenced.
+  humanURL: https://buildpacks.io/docs/reference/spec/distribution-api/
+  tags:
+  - API Specification
+  - Distribution
+  - OCI
+  - Packaging
+  - Registries
+  - Specification
+  properties:
+  - type: Documentation
+    url: https://buildpacks.io/docs/reference/spec/distribution-api/
+  - type: GitHubRepository
+    url: https://github.com/buildpacks/spec
+  - url: https://github.com/buildpacks/spec/blob/main/distribution.md
+    type: Specification
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: buildpacks:pack-cli
+  name: pack CLI
+  tags:
+  - CLI
+  - Tooling
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://buildpacks.io/docs/for-app-developers/how-to/build-inputs/
+  properties:
+  - url: https://buildpacks.io/docs/for-app-developers/how-to/build-inputs/
+    type: Documentation
+  - url: https://github.com/buildpacks/pack
+    type: Source Code
+  - type: CLI
+    url: cli/buildpacks-cli.yml
+  description: pack is the reference command-line interface for Cloud Native Buildpacks. It implements
+    the Platform API to build OCI images from source on a developer's workstation, manages builders and
+    buildpack packages, and integrates with Docker and OCI registries.
+- aid: buildpacks:lifecycle
+  name: CNB Lifecycle
+  tags:
+  - Lifecycle
+  - Reference Implementation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://github.com/buildpacks/lifecycle
+  properties:
+  - url: https://github.com/buildpacks/lifecycle
+    type: Source Code
+  - url: https://buildpacks.io/docs/for-platform-operators/concepts/lifecycle/
+    type: Documentation
+  description: The CNB Lifecycle is the reference implementation of the Buildpack and Platform APIs. It
+    runs the detect, analyze, restore, build, export, and rebase phases used by all CNB platforms to produce
+    reproducible OCI images.
+- aid: buildpacks:kpack
+  name: kpack
+  tags:
+  - Kubernetes
+  - Server-side Builds
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://github.com/buildpacks-community/kpack
+  properties:
+  - url: https://github.com/buildpacks-community/kpack
+    type: Source Code
+  - url: https://github.com/buildpacks-community/kpack/blob/main/docs/image.md
+    type: Documentation
+  - type: OpenAPI
+    url: openapi/buildpacks-kpack-swagger.json
+  - type: Overlay
+    url: overlays/buildpacks-kpack-overlay.yaml
+  - type: DataModel
+    url: data-model/buildpacks-data-model.yml
+  - type: AgentSkill
+    url: skills/buildpacks-build-an-image-with-kpack.md
+  description: kpack is a community Kubernetes-native implementation of Cloud Native Buildpacks. It exposes
+    Image, Builder, ClusterBuilder, and ClusterStack custom resources for declaring continuously rebuilt
+    OCI images using CNB.
+  baseURL: https://{kubernetes-apiserver}/apis/kpack.io/v1alpha1
+- aid: buildpacks:registry
+  name: Buildpack Registry
+  tags:
+  - Discovery
+  - Registry
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://registry.buildpacks.io/
+  properties:
+  - url: https://registry.buildpacks.io/
+    type: Registry
+  - url: https://github.com/buildpacks/registry-api
+    type: Source Code
+  - type: Documentation
+    url: https://github.com/buildpacks/registry-api
+  - type: APIReference
+    url: https://github.com/buildpacks/registry-api#endpoints
   - type: Specification
-    url: https://github.com/buildpacks/spec/blob/main/buildpack.md
-  - type: MailingList
-    url: https://lists.cncf.io/g/cncf-buildpacks/join
-  - type: Slack
-    url: https://slack.cncf.io
-  - type: CNCF
-    url: https://www.cncf.io/projects/buildpacks/
-  - type: DevStats
-    url: https://buildpacks.devstats.cncf.io/
-  - name: Use Cases
-    type: UseCases
-    data:
-      - name: App Developer Image Building
-        url: https://buildpacks.io/docs/for-app-developers/
-        features:
-          - No Dockerfile Required
-          - Automatic Dependency Detection
-          - Multi-Language Support
-          - Reproducible Builds
-          - ARM Container Support
-          - Windows Container Support
-      - name: Platform Operator Integration
-        url: https://buildpacks.io/docs/for-platform-operators/
-        features:
-          - CI/CD Pipeline Integration
-          - pack CLI Integration
-          - kpack Kubernetes Operator
-          - Tekton Pipeline Support
-          - CircleCI Integration
-          - GitLab CI Integration
-          - Custom Builder Creation
-      - name: Buildpack Authoring
-        url: https://buildpacks.io/docs/for-buildpack-authors/
-        features:
-          - Custom Language Support
-          - Framework-Specific Buildpacks
-          - Buildpack Packaging
-          - Registry Distribution
-          - Extension Authoring
-          - Composable Buildpack Groups
-      - name: OS-Level Security Patching
-        url: https://buildpacks.io/docs/reference/spec/platform-api/
-        features:
-          - Layer Rebasing
-          - Base Image Updates Without Rebuild
-          - Minimal Rebuild Surface
-          - Stack Switching
-  - name: Features
-    type: Features
-    data:
-      - name: pack build
-        url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
-        features:
-          - Source-to-Image Conversion
-          - Builder Selection
-          - Environment Variable Injection
-          - Volume Mount Support
-          - Cache Integration
-      - name: pack builder
-        url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
-        features:
-          - Create Custom Builders
-          - Inspect Builder Contents
-          - Trust Builder Configuration
-          - Suggest Default Builders
-      - name: pack rebase
-        url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
-        features:
-          - Update Base Image Layers
-          - No Source Rebuild Required
-          - Fast Security Patching
-      - name: pack sbom download
-        url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
-        features:
-          - Software Bill of Materials
-          - Dependency Inventory
-          - Security Auditing
-          - License Tracking
-      - name: Buildpack Registry
-        url: https://registry.buildpacks.io/
-        features:
-          - Community Buildpack Discovery
-          - Namespace Registration
-          - Version Tracking
-          - Verified Buildpacks
+    url: https://github.com/buildpacks/spec/blob/main/extensions/buildpack-registry.md
+  - type: AgentSkill
+    url: skills/buildpacks-publish-a-buildpack-to-the-registry.md
+  description: The Cloud Native Buildpacks registry indexes published buildpacks for discovery and reuse.
+    It mirrors metadata for buildpack packages stored in OCI registries and exposes a browseable catalog
+    at registry.buildpacks.io.
+  baseURL: https://registry.buildpacks.io/api/v1
+common:
+- type: IssueTracker
+  url: https://github.com/buildpacks/spec/issues
+- type: Releases
+  url: https://github.com/buildpacks/spec/releases
+- type: CodeOfConduct
+  url: https://github.com/buildpacks/.github/blob/main/CODE_OF_CONDUCT.md
+- type: ContributionGuide
+  url: https://github.com/buildpacks/spec/blob/main/CONTRIBUTING.md
+- type: License
+  name: Apache-2.0
+  url: https://github.com/buildpacks/spec/blob/main/LICENSE
+- type: DomainSecurity
+  url: security/buildpacks-domain-security.yml
+- type: Website
+  url: https://buildpacks.io
+- type: Documentation
+  url: https://buildpacks.io/docs/
+- type: GitHubOrganization
+  url: https://github.com/buildpacks
+- type: Blog
+  url: https://medium.com/buildpacks
+- url: https://medium.com/feed/buildpacks
+  type: BlogRSS
+  description: Discovered RSS/Atom feed for https://medium.com/buildpacks
+- type: Community
+  url: https://buildpacks.io/community/
+- type: Registry
+  url: https://registry.buildpacks.io/
+- type: Specification
+  url: https://github.com/buildpacks/spec/blob/main/buildpack.md
+- type: MailingList
+  url: https://lists.cncf.io/g/cncf-buildpacks/join
+- type: Slack
+  url: https://slack.cncf.io
+- type: CNCF
+  url: https://www.cncf.io/projects/buildpacks/
+- type: DevStats
+  url: https://buildpacks.devstats.cncf.io/
+- name: Use Cases
+  type: UseCases
+  data:
+  - name: App Developer Image Building
+    url: https://buildpacks.io/docs/for-app-developers/
+    features:
+    - No Dockerfile Required
+    - Automatic Dependency Detection
+    - Multi-Language Support
+    - Reproducible Builds
+    - ARM Container Support
+    - Windows Container Support
+  - name: Platform Operator Integration
+    url: https://buildpacks.io/docs/for-platform-operators/
+    features:
+    - CI/CD Pipeline Integration
+    - pack CLI Integration
+    - kpack Kubernetes Operator
+    - Tekton Pipeline Support
+    - CircleCI Integration
+    - GitLab CI Integration
+    - Custom Builder Creation
+  - name: Buildpack Authoring
+    url: https://buildpacks.io/docs/for-buildpack-authors/
+    features:
+    - Custom Language Support
+    - Framework-Specific Buildpacks
+    - Buildpack Packaging
+    - Registry Distribution
+    - Extension Authoring
+    - Composable Buildpack Groups
+  - name: OS-Level Security Patching
+    url: https://buildpacks.io/docs/reference/spec/platform-api/
+    features:
+    - Layer Rebasing
+    - Base Image Updates Without Rebuild
+    - Minimal Rebuild Surface
+    - Stack Switching
+- name: Features
+  type: Features
+  data:
+  - name: pack build
+    url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+    features:
+    - Source-to-Image Conversion
+    - Builder Selection
+    - Environment Variable Injection
+    - Volume Mount Support
+    - Cache Integration
+  - name: pack builder
+    url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+    features:
+    - Create Custom Builders
+    - Inspect Builder Contents
+    - Trust Builder Configuration
+    - Suggest Default Builders
+  - name: pack rebase
+    url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+    features:
+    - Update Base Image Layers
+    - No Source Rebuild Required
+    - Fast Security Patching
+  - name: pack sbom download
+    url: https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/cli/
+    features:
+    - Software Bill of Materials
+    - Dependency Inventory
+    - Security Auditing
+    - License Tracking
+  - name: Buildpack Registry
+    url: https://registry.buildpacks.io/
+    features:
+    - Community Buildpack Discovery
+    - Namespace Registration
+    - Version Tracking
+    - Verified Buildpacks
+- type: Packages
+  url: packages/buildpacks-packages.yml
+- type: SDKs
+  url: packages/buildpacks-packages.yml
+- type: CLI
+  url: cli/buildpacks-cli.yml
+- type: Conventions
+  url: conventions/buildpacks-conventions.yml
+- type: Idempotency
+  url: conventions/buildpacks-conventions.yml
+- type: Authentication
+  url: authentication/buildpacks-authentication.yml
+- type: ErrorCatalog
+  url: errors/buildpacks-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/buildpacks-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/buildpacks-lifecycle.yml
+- type: ChangeLog
+  url: changelog/buildpacks-changelog.yml
+- type: Conformance
+  url: conformance/buildpacks-conformance.yml
+- type: Compliance
+  url: conformance/buildpacks-conformance.yml
+- type: DataModel
+  url: data-model/buildpacks-data-model.yml
+- type: VulnerabilityDisclosure
+  url: security/buildpacks-vulnerability-disclosure.yml
+- type: Security
+  url: security/buildpacks-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/buildpacks-trust-center.yml
+- type: LLMsTxt
+  url: llms/buildpacks-llms.txt
+- type: Overlay
+  url: overlays/buildpacks-kpack-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/buildpacks-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/buildpacks-rate-limits.yml
+- type: FinOps
+  url: finops/buildpacks-finops.yml
+- type: OpenAPI
+  url: openapi/buildpacks-kpack-swagger.json
+- type: DeveloperPortal
+  url: https://buildpacks.io/docs/
+- type: APIReference
+  url: https://buildpacks.io/docs/reference/spec/
+- type: GettingStarted
+  url: https://buildpacks.io/docs/app-journey
+- type: PrivacyPolicy
+  url: https://www.linuxfoundation.org/privacy/
+- type: Support
+  url: https://buildpacks.io/community/
+- type: x-RFCs
+  url: https://github.com/buildpacks/rfcs
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v3

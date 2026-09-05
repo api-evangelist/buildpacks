@@ -1,0 +1,123 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://github.com/buildpacks/spec (README.md, RELEASE.md, buildpack.md#deprecations,
+  platform.md#deprecations, distribution.md), https://github.com/buildpacks/spec/releases,
+  https://buildpacks.io/docs/reference/spec/, https://buildpacks.io/history
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Versioning, deprecation and release governance for the Cloud Native Buildpacks specifications and
+  their reference implementations. CNB versions THREE independent API contracts on separate tracks,
+  each with its own release milestones and its own Deprecations section in the spec text.
+versioning:
+  scheme: major.minor
+  in: contract-declared API version (not a URL path or header)
+  rule: >-
+    "API versions MUST be in form <major>.<minor> or <major>, where <major> is equivalent to
+    <major>.0. When <major> is greater than 0 increments to <minor> SHALL exclusively indicate
+    additive changes." — https://github.com/buildpacks/spec/blob/main/distribution.md
+  note: >-
+    All three APIs remain on major version 0, so minor increments are NOT guaranteed additive today;
+    that guarantee attaches at 1.0.
+  current:
+  - api: Buildpack API
+    version: '0.12'
+    released: '2025-12-11'
+    release: https://github.com/buildpacks/spec/releases/tag/buildpack%2F0.12
+  - api: Platform API
+    version: '0.15'
+    released: '2025-12-11'
+    release: https://github.com/buildpacks/spec/releases/tag/platform%2F0.15
+  - api: Distribution API
+    version: '0.3'
+    released: null
+    note: Declared in distribution.md; not cut as a standalone GitHub release.
+  - api: kpack CRD API
+    version: v1alpha1
+    note: >-
+      Kubernetes alpha API version. Per Kubernetes convention an alpha group/version may change
+      incompatibly and may be dropped; kpack has nonetheless served v1alpha1 since its first release.
+release_process:
+  documented: true
+  url: https://github.com/buildpacks/spec/blob/main/RELEASE.md
+  summary: >-
+    A maintainer opens a milestone, cuts a `<spec>/<version>` release branch, and spec changes must
+    be approved by a super-majority of the core team before the release PR merges. Release planning
+    is reviewed at the weekly core team sync.
+  governance: https://github.com/buildpacks/community#core-team
+deprecation_policy:
+  documented: true
+  mechanism: >-
+    Each specification carries a normative "Deprecations" section naming every deprecated feature and
+    the exact API version in which it was deprecated, with a migration path. There is no HTTP
+    Sunset/Deprecation header surface, because these are file-format and process contracts rather
+    than a hosted HTTP API.
+  urls:
+  - https://github.com/buildpacks/spec/blob/main/buildpack.md#deprecations
+  - https://github.com/buildpacks/spec/blob/main/platform.md#deprecations
+  examples:
+  - feature: buildpack.toml `stacks` array
+    deprecated_in: Buildpack API 0.10
+  - feature: positional arguments to the `detect` and `build` executables
+    deprecated_in: Buildpack API 0.8
+  - feature: buildpack.toml `bom` array
+    deprecated_in: Buildpack API 0.7
+  - feature: the `stack` key / stack concept
+    deprecated_in: Platform API 0.12
+  - feature: '`-image` flag on the lifecycle rebase phase'
+    deprecated_in: Platform API (marked Deprecated in platform.md)
+migration_guides:
+  published: true
+  index: https://buildpacks.io/docs/reference/spec/
+  supported:
+  - Platform API 0.7 -> 0.8
+  - Platform API 0.8 -> 0.9
+  - Platform API 0.9 -> 0.10
+  - Platform API 0.10 -> 0.11
+  - Platform API 0.11 -> 0.12
+  - Buildpack API 0.7 -> 0.8
+  - Buildpack API 0.8 -> 0.9
+  - Buildpack API 0.9 -> 0.10
+  deprecated_unsupported:
+  - Buildpack API 0.4 -> 0.5
+  - Buildpack API 0.5 -> 0.6
+  - Buildpack API 0.6 -> 0.7
+  note: >-
+    The docs sidebar separates guides for supported APIs from a "Deprecated (unsupported) APIs"
+    group — an explicit, published end-of-support boundary.
+support_policy:
+  security_fixes: >-
+    "Security fixes are applied to the latest release of each Cloud Native Buildpacks project. Users
+    are encouraged to stay on the most recent release to receive security updates."
+  url: https://github.com/buildpacks/.github/blob/main/SECURITY.md
+status_page:
+  published: false
+  probed:
+  - url: https://status.buildpacks.io/
+    status: 000
+    note: DNS does not resolve (NXDOMAIN), probed 2026-09-05.
+  note: >-
+    No status page exists and arguably none should — buildpacks.io is a static site and the only
+    hosted service is the read-only Buildpack Registry API. No StatusPage pointer is emitted.
+maturity:
+  foundation: Cloud Native Computing Foundation
+  status: Graduated
+  graduated: '2026-08-11'
+  sandbox_accepted: '2018-10'
+  originated: '2018-01'
+  evidence: https://buildpacks.io/history#graduation
+  devstats: https://buildpacks.devstats.cncf.io/
+implementation_releases:
+- project: pack CLI
+  version: v0.40.9
+  released: '2026-08-09'
+  url: https://github.com/buildpacks/pack/releases
+- project: lifecycle
+  version: v0.21.18
+  released: '2026-08-21'
+  url: https://github.com/buildpacks/lifecycle/releases
+- project: kpack
+  version: v0.18.0
+  released: '2026-07-02'
+  url: https://github.com/buildpacks-community/kpack/releases

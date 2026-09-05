@@ -1,0 +1,73 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/buildpacks-kpack-swagger.json (declared responses) plus live anonymous probes of
+  https://registry.buildpacks.io/api/v1/* on 2026-09-05
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+format: none
+format_note: >-
+  Neither surface uses RFC 9457 application/problem+json. The Buildpack Registry returns a bare
+  {"error": "<string>"} JSON envelope; kpack returns the standard Kubernetes
+  io.k8s.apimachinery.pkg.apis.meta.v1.Status envelope produced by the API server.
+description: >-
+  Error catalog for the two callable Cloud Native Buildpacks surfaces. The kpack rows are derived
+  from the responses the published Swagger declares; the Buildpack Registry rows were observed
+  live, because that API publishes no machine-readable contract.
+surfaces:
+- api: Buildpack Registry API
+  base_url: https://registry.buildpacks.io/api/v1
+  envelope: '{"error": "<human-readable string>"}'
+  content_type: application/json; charset=utf-8
+  method: probed
+  errors:
+  - status: 400
+    body: '{"error":"Missing search string ''matches''"}'
+    meaning: The required `matches` query parameter was omitted from GET /search.
+    action: Supply ?matches=<keyword>.
+    evidence: 'GET https://registry.buildpacks.io/api/v1/search -> 400, observed 2026-09-05'
+  - status: 404
+    body: '{"error":"Unknown buildpack"}'
+    meaning: No buildpack is indexed under the requested <namespace>/<name>.
+    action: Confirm the buildpack ID against GET /search?matches=<keyword>.
+    evidence: 'GET https://registry.buildpacks.io/api/v1/buildpacks/nope/nope -> 404, observed 2026-09-05'
+  - status: 404
+    body: ''
+    meaning: >-
+      Path not routed. config/routes.rb exposes only /api/v1/search,
+      /api/v1/buildpacks/:namespace/:name and /api/v1/buildpacks/:namespace/:name/:version; a
+      collection listing such as /api/v1/buildpacks does not exist.
+    action: Use one of the three routed paths.
+    evidence: 'GET https://registry.buildpacks.io/api/v1/buildpacks -> 404 with an empty body, observed 2026-09-05'
+  unmodelled:
+  - note: >-
+      No 429, 5xx or auth error was observed and none is documented at
+      https://github.com/buildpacks/registry-api. Their shape is unknown rather than absent.
+- api: kpack (kpack.io/v1alpha1)
+  envelope: io.k8s.apimachinery.pkg.apis.meta.v1.Status
+  method: derived
+  errors:
+  - status: 401
+    title: Unauthorized
+    meaning: >-
+      The Kubernetes API server rejected the request's credentials. Declared on all 67 operations in
+      openapi/buildpacks-kpack-swagger.json — it is the ONLY error response the spec models.
+    action: Present a valid ServiceAccount token or client certificate with RBAC on the kpack.io group.
+  - status: 410
+    title: ResourceExpired
+    meaning: >-
+      A list `continue` token has expired (generally five to fifteen minutes) or the server
+      configuration changed.
+    action: >-
+      Restart the list without `continue`, or resume from the token returned with the 410 —
+      accepting that the resulting page is from a newer snapshot and therefore inconsistent with
+      earlier pages.
+    evidence: >-
+      Documented in the `continue` query-parameter description of every list operation in
+      openapi/buildpacks-kpack-swagger.json.
+  gaps:
+  - >-
+      403 (RBAC denial), 404 (resource not found), 409 (AlreadyExists / resourceVersion conflict)
+      and 422 (admission/validation failure) are all reachable against a real cluster and are all
+      ABSENT from the published Swagger. An agent cannot learn their shape from the contract; it has
+      to fall back to the generic Kubernetes Status envelope.

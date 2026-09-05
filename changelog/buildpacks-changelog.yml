@@ -1,0 +1,90 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.github.com/repos/buildpacks/spec/releases,
+  https://github.com/buildpacks/pack/releases, https://github.com/buildpacks/lifecycle/releases,
+  https://github.com/buildpacks-community/kpack/releases
+provider: Cloud Native Buildpacks
+providerId: buildpacks
+description: >-
+  Cloud Native Buildpacks publishes no single prose changelog. Change is announced through dated
+  GitHub Releases on four independent tracks — the specification repo (which cuts one release per
+  API version), and the pack, lifecycle and kpack implementations. The spec track is the one that
+  represents a contract change for integrators.
+scheme: major.minor per API, cut as a tagged GitHub Release
+current:
+  buildpack_api: '0.12'
+  platform_api: '0.15'
+  distribution_api: '0.3'
+  pack_cli: v0.40.9
+  lifecycle: v0.21.18
+  kpack: v0.18.0
+tracks:
+- name: Specification
+  url: https://github.com/buildpacks/spec/releases
+  cadence: irregular; driven by milestone completion and a super-majority core-team vote
+- name: pack CLI
+  url: https://github.com/buildpacks/pack/releases
+- name: lifecycle
+  url: https://github.com/buildpacks/lifecycle/releases
+- name: kpack
+  url: https://github.com/buildpacks-community/kpack/releases
+entries:
+- version: platform/0.15
+  date: '2025-12-11'
+  track: Specification
+  title: Platform API 0.15
+  breaking: unknown
+  note: >-
+    Platform API remains on major 0, so the spec's own additive-only guarantee for minor increments
+    does not yet apply. Read the release notes before upgrading a platform.
+- version: buildpack/0.12
+  date: '2025-12-11'
+  track: Specification
+  title: Buildpack API 0.12
+  breaking: unknown
+- version: platform/v0.14
+  date: '2024-07-17'
+  track: Specification
+  title: Platform API 0.14
+- version: platform/v0.13
+  date: '2024-03-05'
+  track: Specification
+  title: Platform API 0.13
+- version: buildpack/v0.11
+  date: '2024-03-05'
+  track: Specification
+  title: Buildpack API 0.11
+- version: platform/v0.12
+  date: '2023-08-03'
+  track: Specification
+  title: Platform API 0.12
+  breaking: true
+  highlights:
+  - Deprecates the `stack` key and the stack concept (platform.md#deprecations).
+- version: buildpack/v0.10
+  date: '2023-08-03'
+  track: Specification
+  title: Buildpack API 0.10
+  breaking: true
+  highlights:
+  - Deprecates the buildpack.toml `stacks` array (buildpack.md#deprecations).
+- version: v0.40.9
+  date: '2026-08-09'
+  track: pack CLI
+  title: pack v0.40.9
+- version: v0.21.18
+  date: '2026-08-21'
+  track: lifecycle
+  title: lifecycle v0.21.18
+- version: v0.18.0
+  date: '2026-07-02'
+  track: kpack
+  title: kpack v0.18.0
+gaps:
+- >-
+  No aggregate project changelog and no RSS/Atom feed of releases is advertised on buildpacks.io.
+  An integrator has to watch four repositories independently.
+- >-
+  GitHub release notes for the spec tracks do not carry a machine-readable breaking-vs-additive flag;
+  the Deprecations sections in buildpack.md and platform.md are the authoritative record.
