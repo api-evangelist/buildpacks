@@ -46,6 +46,7 @@ created: '2025-01-01'
 modified: '2026-09-16'
 specificationVersion: '0.23'
 tags:
+- Cloud Native Buildpacks
 - Build Tools
 - CI/CD
 - Cloud-Native
