@@ -54,8 +54,8 @@ tags:
 - Containers
 - OCI
 - Open-Source
-- Cloud Native Buildpacks
 tags_raw:
+- Cloud Native Buildpacks
 - Build Tools
 - CI/CD
 - Cloud Native
@@ -94,6 +94,12 @@ apis:
     phases (analyze, detect, restore, build, export, and rebase) and how outputs are consumed.
   humanURL: https://buildpacks.io/docs/reference/spec/platform-api/
   tags:
+  - API Specification
+  - Container Images
+  - Lifecycle
+  - Platform
+  - Specification
+  tags_raw:
   - API Specification
   - Container Images
   - Lifecycle
