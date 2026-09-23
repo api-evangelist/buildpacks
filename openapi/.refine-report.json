@@ -1,0 +1,21 @@
+{
+  "provider": "buildpacks",
+  "sources": [
+    "_original/buildpacks-kpack-swagger.json"
+  ],
+  "outputs": [
+    "buildpacks-kpack-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "buildpacks-kpack-swagger.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "buildpacks-kpack-swagger.json: declared missing tag: kpack",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "buildpacks-kpack-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
