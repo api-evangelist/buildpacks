@@ -54,7 +54,7 @@ tags:
 - Container Images
 - Containers
 - OCI
-- Open-Source
+- Open Source
 tags_raw:
 - Cloud Native Buildpacks
 - Build Tools
@@ -65,6 +65,7 @@ tags_raw:
 - Containers
 - OCI
 - Open Source
+- Open-Source
 apis:
 - aid: buildpacks:buildpack-api
   name: Buildpack API Specification
@@ -194,51 +195,6 @@ apis:
     It mirrors metadata for buildpack packages stored in OCI registries and exposes a browseable catalog
     at registry.buildpacks.io.
   baseURL: https://registry.buildpacks.io/api/v1
-- aid: buildpacks:buildpack-api
-  name: Buildpack API
-  tags:
-  - Buildpacks
-  - Specification
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://github.com/buildpacks/spec/blob/main/buildpack.md
-  properties:
-  - url: https://github.com/buildpacks/spec/blob/main/buildpack.md
-    type: Specification
-  - url: https://buildpacks.io/docs/for-buildpack-authors/
-    type: Documentation
-  description: The Buildpack API is the contract between a buildpack and the lifecycle. It defines the
-    detect and build executables, layers, build-plan provisions and requirements, and image extension
-    lifecycle that buildpack authors implement to participate in a CNB build.
-- aid: buildpacks:platform-api
-  name: Platform API
-  tags:
-  - Lifecycle
-  - Platform
-  - Specification
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://github.com/buildpacks/spec/blob/main/platform.md
-  properties:
-  - url: https://github.com/buildpacks/spec/blob/main/platform.md
-    type: Specification
-  - url: https://buildpacks.io/docs/for-platform-operators/
-    type: Documentation
-  description: The Platform API is the contract between the CNB lifecycle and a platform such as pack,
-    kpack, or a CI runner. It defines how builders, stacks, run images, and inputs are passed to the lifecycle
-    phases (analyze, detect, restore, build, export, and rebase) and how outputs are consumed.
-- aid: buildpacks:distribution-api
-  name: Distribution API
-  tags:
-  - Distribution
-  - Registries
-  - Specification
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://github.com/buildpacks/spec/blob/main/distribution.md
-  properties:
-  - url: https://github.com/buildpacks/spec/blob/main/distribution.md
-    type: Specification
-  description: The Distribution API specifies how buildpacks and builders are packaged as OCI artifacts,
-    signed, and distributed through OCI registries. It also covers how meta-buildpacks compose other buildpacks
-    and how stacks and run images are referenced.
 - aid: buildpacks:buildpacks-kpack-api
   name: Cloud Native Buildpacks Kpack API
   description: The kpack API from Cloud Native Buildpacks — 25 operation(s) for kpack.
