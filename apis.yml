@@ -212,6 +212,9 @@ apis:
   - type: DataModel
     url: data-model/buildpacks-data-model.yml
 common:
+- type: CapabilityMap
+  url: capabilities/buildpacks-capability-edges.yml
+  name: Cloud Native Buildpacks Business Capability Map
 - type: AgentSkill
   url: skills/buildpacks-build-an-image-with-kpack.md
 - type: IssueTracker
