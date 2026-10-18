@@ -75,6 +75,12 @@ apis:
   humanURL: https://buildpacks.io/docs/reference/spec/buildpack-api/
   tags:
   - API Specification
+  - Cloud Native Buildpacks
+  - Container Images
+  - OCI
+  - Specification
+  tags_raw:
+  - API Specification
   - Buildpacks
   - Container Images
   - OCI
