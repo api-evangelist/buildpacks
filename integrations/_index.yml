@@ -39,3 +39,33 @@
     detected: '2026-10-19'
   status: not-a-workflow
   arazzo: null
+- slug: buildpacks-scoop
+  label: Scoop
+  partner_name: Scoop
+  category: official CLI (Scoop)
+  type: register
+  channel: package-registry
+  evidence: https://github.com/ScoopInstaller/Main/blob/master/bucket/pack.json
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Scoop (public package index)
+    spec_file: null
+    packages:
+    - name: pack
+      kind: main
+      version: 0.40.9
+      released: null
+      lapsed: false
+      page: https://github.com/ScoopInstaller/Main/blob/master/bucket/pack.json
+      cli: 'scoop description: Buildpack CLI'
+      repo_leg: domain:buildpacks.io
+      publisher_leg: artifact-shared-github-org:buildpacks
+      matched_by: domain+name-among-holders
+    current: true
+    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
+      lapsed = no release in 24 months or deprecated / disabled by the manager'
+    detected_by: sweep-official-clis.py
+    detected: '2026-10-20'
+  status: not-a-workflow
+  arazzo: null
