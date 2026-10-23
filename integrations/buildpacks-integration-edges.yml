@@ -64,7 +64,7 @@ edges:
     detected: '2026-10-20'
   detected_by: sweep-official-clis.py
   first_seen: '2026-10-20'
-- partner_name: OpenSSF Best Practices Badge
+- partner_name: OpenSSF Best Practices Badge (bestpractices.dev)
   partner: null
   partner_match: register
   type: register
@@ -72,33 +72,34 @@ edges:
   relationship: standard-participant
   direction: partner-built
   evidence: https://www.bestpractices.dev/en/projects/4748
-  category: OpenSSF Best Practices badge (open-source project security conformance)
+  category: OpenSSF Best Practices badge (open-source project security practices)
   contract_reference:
-    register: OpenSSF Best Practices badge projects (bestpractices.dev/en/projects.json, paged)
-    standard: OpenSSF Best Practices Badge criteria (formerly CII Best Practices; bestpractices.dev)
+    register: OpenSSF Best Practices Badge projects (www.bestpractices.dev/en/projects.json)
+    standard: OpenSSF Best Practices Badge criteria (passing / silver / gold)
     spec_file: null
-    role: badge-holder
+    role: badged-project-owner
     registered_name: 'Cloud Native Buildpacks '
-    matched_by: github-org+name-among-claimants
-    matched_on: buildpacks
+    matched_domain: buildpacks.io
+    matched_by: domain+name-among-holders
     certified_products:
     - product: open-source project
       product_type: open-source project
-      standard: OpenSSF Best Practices Badge criteria (formerly CII Best Practices; bestpractices.dev)
-      lapsed: false
+      standard: OpenSSF Best Practices Badge criteria (passing / silver / gold)
       partner_tier: passing
-      projects:
-      - name: 'Cloud Native Buildpacks '
-        id: 4748
-        url: https://www.bestpractices.dev/en/projects/4748
-        badge_level: passing
-      - name: Pack CLI
-        id: 9905
-        url: https://www.bestpractices.dev/en/projects/9905
-        badge_level: passing
-    signal_note: 'certified_products = ONE entry (product type: open-source project) with the highest CURRENT badge
-      level in partner_tier; a provider whose projects only lost the badge is lapsed: true; project names are context,
-      never counted; in_progress entries are not conformance'
+      lapsed: false
+      badge_date: '2021-03-17'
+    badged_projects:
+    - name: 'Cloud Native Buildpacks '
+      id: 4748
+      badge: passing
+      url: https://www.bestpractices.dev/en/projects/4748
+    - name: Pack CLI
+      id: 9905
+      badge: passing
+      url: https://www.bestpractices.dev/en/projects/9905
+    signal_note: 'certified_products = ONE entry per provider (product type open-source project): highest current
+      OpenSSF Best Practices badge level in partner_tier, earliest date at that level; lapsed: true when every linked
+      project lost its badge. badged_projects is context, never counted'
     detected_by: sweep-openssf-best-practices-badges.py
     detected: '2026-10-22'
   detected_by: sweep-openssf-best-practices-badges.py
@@ -120,3 +121,4 @@ checked:
 - https://pypi.org/pypi
 - https://registry.npmjs.org
 - https://www.bestpractices.dev/en/projects.json
+- https://www.bestpractices.dev/en/projects.json?page=N
